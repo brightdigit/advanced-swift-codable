@@ -1,6 +1,7 @@
 import UIKit
 import PlaygroundSupport
 
+public typealias Color = String
 let twitterDateFormatString = "eee MMM dd HH:mm:ss ZZZZ yyyy"
 let twitterDateFormatter = {
   dateFormat -> DateFormatter in
@@ -19,6 +20,48 @@ guard let twitterURL = Bundle.main.url(forResource: "twitter", withExtension: "j
 guard let twitterData = try? Data(contentsOf: twitterURL) else {
   PlaygroundPage.current.finishExecution()
 }
+public struct TweetUser : Codable {
+  public let id : Int
+  public let name : String
+  public let screen_name : String
+  public let location : String
+  public let description : String
+  public let url : URL?
+  public let entities : TweetEntities
+  public let protected : Bool
+  public let followers_count : Int
+  public let friends_count : Int
+  public let listed_count : Int
+  public let created_at : Date
+  public let favourites_count : Int
+  public let utc_offset : TimeInterval
+  public let time_zone : String
+  public let geo_enabled : Bool
+  public let verified : Bool
+  public let statuses_count : Int
+  public let lang : String
+  public let contributors_enabled : Bool
+  public let is_translator: Bool
+  public let is_translation_enabled: Bool
+  public let profile_background_color: Color
+  public let profile_background_image_url: URL?
+  public let profile_background_image_url_https: URL?
+  public let profile_background_tile: Bool
+  public let profile_image_url: URL?
+  public let profile_image_url_https: URL?
+  public let profile_banner_url: URL?
+  public let profile_link_color: Color
+  public let profile_sidebar_border_color: Color
+  public let profile_sidebar_fill_color: Color
+  public let profile_text_color: Color
+  public let profile_use_background_image: Bool
+  public let has_extended_profile: Bool
+  public let default_profile: Bool
+  public let default_profile_image: Bool
+  public let following: Bool
+  public let follow_request_sent: Bool
+  public let notifications: Bool
+}
 
 public struct Tweet : Codable {
   public let created_at : Date
@@ -26,11 +69,16 @@ public struct Tweet : Codable {
   public let full_text : String
   public let display_text_range : [Int]
   public let entities : TweetEntities
+  public let source : String
+  public let in_reply_to_status_id : Int?
+  public let in_reply_to_user_id : Int?
+  public let in_reply_to_screen_name : String
+  public let user : TweetUser
 }
 
 public struct TweetEntities : Codable {
-  public let user_mentions : [TweetUserMentionsEntity]
-  public let urls : [TweetURL]
+  public let user_mentions : [TweetUserMentionsEntity]?
+  public let urls : [TweetURL]?
 }
 
 public struct TweetUserMentionsEntity : Codable {
@@ -51,358 +99,169 @@ let decoder = JSONDecoder()
 decoder.dateDecodingStrategy = .formatted(twitterDateFormatter)
 let tweet = try decoder.decode(Tweet.self, from: twitterData)
 
-//  "created_at":"Tue Jan 29 00:05:53 +0000 2019",
-//  "id":1090038283676065792,
-//  "id_str":"1090038283676065792",
-//  "full_text":"NEEENIII NEEENIII NEEENIII NEEENIII NEEENIII NEEENIII #GONENI https:\/\/t.co\/qSjcMssszy",
-//  "truncated":false,
-//  "display_text_range":[
-//  0,
-//  85
-//  ],
-//  "entities":{
-//    "hashtags":[
-//    {
-//    "text":"GONENI",
-//    "indices":[
-//    54,
-//    61
-//    ]
-//    }
-//    ],
-//    "symbols":[
-//
-//    ],
-//    "user_mentions":[
-//
-//    ],
-//    "urls":[
-//    {
-//    "url":"https:\/\/t.co\/qSjcMssszy",
-//    "expanded_url":"https:\/\/twitter.com\/neniambulance\/status\/1022478993717641216",
-//    "display_url":"twitter.com\/neniambulance\/\u2026",
-//    "indices":[
-//    62,
-//    85
-//    ]
-//    }
-//    ]
-//  },
-//  "source":"\u003ca href=\"https:\/\/github.com\/andremann\/neni-the-ambulance\" rel=\"nofollow\"\u003eNeni the ambulance\u003c\/a\u003e",
-//  "in_reply_to_status_id":null,
-//  "in_reply_to_status_id_str":null,
-//  "in_reply_to_user_id":null,
-//  "in_reply_to_user_id_str":null,
-//  "in_reply_to_screen_name":null,
-//  "user":{
-//    "id":1011638875746439169,
-//    "id_str":"1011638875746439169",
-//    "name":"Neni the ambulance",
-//    "screen_name":"neniambulance",
-//    "location":"World",
-//    "description":"I'm an ambulance, neni neni.  I will come and get you all. ALL! #JeSuisNENI #NENI #TEAMNENI #GONENI\nFacebook: https:\/\/t.co\/xQzvksX9BK",
-//    "url":null,
-//    "entities":{
-//      "description":{
-//        "urls":[
-//        {
-//        "url":"https:\/\/t.co\/xQzvksX9BK",
-//        "expanded_url":"https:\/\/www.facebook.com\/nenitheambulanceofficial",
-//        "display_url":"facebook.com\/nenitheambulan\u2026",
-//        "indices":[
-//        110,
-//        133
-//        ]
-//        }
-//        ]
-//      }
-//    },
-//    "protected":false,
-//    "followers_count":12675,
-//    "friends_count":106,
-//    "listed_count":18,
-//    "created_at":"Tue Jun 26 15:54:38 +0000 2018",
-//    "favourites_count":364,
-//    "utc_offset":null,
-//    "time_zone":null,
-//    "geo_enabled":true,
-//    "verified":false,
-//    "statuses_count":52331,
-//    "lang":"en",
-//    "contributors_enabled":false,
-//    "is_translator":false,
-//    "is_translation_enabled":false,
-//    "profile_background_color":"000000",
-//    "profile_background_image_url":"http:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
-//    "profile_background_image_url_https":"https:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
-//    "profile_background_tile":false,
-//    "profile_image_url":"http:\/\/pbs.twimg.com\/profile_images\/1011639519832150017\/7pIJxVjl_normal.jpg",
-//    "profile_image_url_https":"https:\/\/pbs.twimg.com\/profile_images\/1011639519832150017\/7pIJxVjl_normal.jpg",
-//    "profile_link_color":"1B95E0",
-//    "profile_sidebar_border_color":"000000",
-//    "profile_sidebar_fill_color":"000000",
-//    "profile_text_color":"000000",
-//    "profile_use_background_image":false,
-//    "has_extended_profile":false,
-//    "default_profile":false,
-//    "default_profile_image":false,
-//    "following":false,
-//    "follow_request_sent":false,
-//    "notifications":false,
-//    "translator_type":"none"
-//  },
-//  "geo":{
-//    "type":"Point",
-//    "coordinates":[
-//    21.91633,
-//    -159.58995
-//    ]
-//  },
-//  "coordinates":{
-//    "type":"Point",
-//    "coordinates":[
-//    -159.58995,
-//    21.91633
-//    ]
-//  },
-//  "place":{
-//    "id":"65af5dc039106ae9",
-//    "url":"https:\/\/api.twitter.com\/1.1\/geo\/id\/65af5dc039106ae9.json",
-//    "place_type":"city",
-//    "name":"Hanapepe",
-//    "full_name":"Hanapepe, HI",
-//    "country_code":"US",
-//    "country":"Estados Unidos",
-//    "contained_within":[
-//
-//    ],
-//    "bounding_box":{
-//      "type":"Polygon",
-//      "coordinates":[
-//      [
-//      [
-//      -159.603987,
-//      21.90065
-//      ],
-//      [
-//      -159.570863,
-//      21.90065
-//      ],
-//      [
-//      -159.570863,
-//      21.930376
-//      ],
-//      [
-//      -159.603987,
-//      21.930376
-//      ]
-//      ]
-//      ]
-//    },
-//    "attributes":{
-//
-//    }
-//  },
-//  "contributors":null,
-//  "is_quote_status":true,
-//  "quoted_status_id":1022478993717641216,
-//  "quoted_status_id_str":"1022478993717641216",
-//  "quoted_status_permalink":{
-//    "url":"https:\/\/t.co\/qSjcMssszy",
-//    "expanded":"https:\/\/twitter.com\/neniambulance\/status\/1022478993717641216",
-//    "display":"twitter.com\/neniambulance\/\u2026"
-//  },
-//  "quoted_status":{
-//    "created_at":"Thu Jul 26 13:49:23 +0000 2018",
-//    "id":1022478993717641216,
-//    "id_str":"1022478993717641216",
-//    "full_text":"***TWITTER AMBULANCE SERVICE***\nMake me NENI NENI by mentioning me in your tweets. Remember to use medical\/emergency hotwords, such as doctor, sos, nurse, die, asap, urgent, etc! \nEnglish, Italian and Spanish are supported.\ne.g. \"Mamma mia! @neniambulance an ambulance pls\" https:\/\/t.co\/xGqdIT4nfG",
-//    "truncated":false,
-//    "display_text_range":[
+
+//  "geo": null,
+//  "coordinates": null,
+//  "place": null,
+//  "contributors": null,
+//  "quoted_status_id": 704059336788606976,
+//  "quoted_status_id_str": "704059336788606976",
+//  "quoted_status": {
+//    "created_at": "Sun Feb 28 21:43:21 +0000 2016",
+//    "id": 704059336788606976,
+//    "id_str": "704059336788606976",
+//    "full_text": "My favorite photographic subject, up closer than ever before. https://t.co/K958bKh9Sd",
+//    "display_text_range": [
 //    0,
-//    273
+//    85
 //    ],
-//    "entities":{
-//      "hashtags":[
-//
-//      ],
-//      "symbols":[
-//
-//      ],
-//      "user_mentions":[
+//    "entities": {
+//      "hashtags": [],
+//      "symbols": [],
+//      "user_mentions": [],
+//      "urls": [],
+//      "media": [
 //      {
-//      "screen_name":"neniambulance",
-//      "name":"Neni the ambulance",
-//      "id":1011638875746439169,
-//      "id_str":"1011638875746439169",
-//      "indices":[
-//      241,
-//      255
-//      ]
-//      }
+//      "id": 704059330149031936,
+//      "id_str": "704059330149031936",
+//      "indices": [
+//      62,
+//      85
 //      ],
-//      "urls":[
-//
-//      ],
-//      "media":[
-//      {
-//      "id":1022478483581280257,
-//      "id_str":"1022478483581280257",
-//      "indices":[
-//      274,
-//      297
-//      ],
-//      "media_url":"http:\/\/pbs.twimg.com\/media\/DjCSw3RXoAE1YLW.jpg",
-//      "media_url_https":"https:\/\/pbs.twimg.com\/media\/DjCSw3RXoAE1YLW.jpg",
-//      "url":"https:\/\/t.co\/xGqdIT4nfG",
-//      "display_url":"pic.twitter.com\/xGqdIT4nfG",
-//      "expanded_url":"https:\/\/twitter.com\/neniambulance\/status\/1022478993717641216\/photo\/1",
-//      "type":"photo",
-//      "sizes":{
-//      "thumb":{
-//      "w":150,
-//      "h":150,
-//      "resize":"crop"
+//      "media_url": "http://pbs.twimg.com/media/CcVSOwJVIAAKwE6.jpg",
+//      "media_url_https": "https://pbs.twimg.com/media/CcVSOwJVIAAKwE6.jpg",
+//      "url": "https://t.co/K958bKh9Sd",
+//      "display_url": "pic.twitter.com/K958bKh9Sd",
+//      "expanded_url": "http://twitter.com/jeremycloud/status/704059336788606976/photo/1",
+//      "type": "photo",
+//      "sizes": {
+//      "medium": {
+//      "w": 600,
+//      "h": 600,
+//      "resize": "fit"
 //      },
-//      "small":{
-//      "w":583,
-//      "h":680,
-//      "resize":"fit"
+//      "thumb": {
+//      "w": 150,
+//      "h": 150,
+//      "resize": "crop"
 //      },
-//      "medium":{
-//      "w":600,
-//      "h":700,
-//      "resize":"fit"
+//      "large": {
+//      "w": 871,
+//      "h": 871,
+//      "resize": "fit"
 //      },
-//      "large":{
-//      "w":600,
-//      "h":700,
-//      "resize":"fit"
+//      "small": {
+//      "w": 340,
+//      "h": 340,
+//      "resize": "fit"
 //      }
 //      }
 //      }
 //      ]
 //    },
-//    "extended_entities":{
-//      "media":[
+//    "extended_entities": {
+//      "media": [
 //      {
-//      "id":1022478483581280257,
-//      "id_str":"1022478483581280257",
-//      "indices":[
-//      274,
-//      297
+//      "id": 704059330149031936,
+//      "id_str": "704059330149031936",
+//      "indices": [
+//      62,
+//      85
 //      ],
-//      "media_url":"http:\/\/pbs.twimg.com\/media\/DjCSw3RXoAE1YLW.jpg",
-//      "media_url_https":"https:\/\/pbs.twimg.com\/media\/DjCSw3RXoAE1YLW.jpg",
-//      "url":"https:\/\/t.co\/xGqdIT4nfG",
-//      "display_url":"pic.twitter.com\/xGqdIT4nfG",
-//      "expanded_url":"https:\/\/twitter.com\/neniambulance\/status\/1022478993717641216\/photo\/1",
-//      "type":"photo",
-//      "sizes":{
-//      "thumb":{
-//      "w":150,
-//      "h":150,
-//      "resize":"crop"
+//      "media_url": "http://pbs.twimg.com/media/CcVSOwJVIAAKwE6.jpg",
+//      "media_url_https": "https://pbs.twimg.com/media/CcVSOwJVIAAKwE6.jpg",
+//      "url": "https://t.co/K958bKh9Sd",
+//      "display_url": "pic.twitter.com/K958bKh9Sd",
+//      "expanded_url": "http://twitter.com/jeremycloud/status/704059336788606976/photo/1",
+//      "type": "photo",
+//      "sizes": {
+//      "medium": {
+//      "w": 600,
+//      "h": 600,
+//      "resize": "fit"
 //      },
-//      "small":{
-//      "w":583,
-//      "h":680,
-//      "resize":"fit"
+//      "thumb": {
+//      "w": 150,
+//      "h": 150,
+//      "resize": "crop"
 //      },
-//      "medium":{
-//      "w":600,
-//      "h":700,
-//      "resize":"fit"
+//      "large": {
+//      "w": 871,
+//      "h": 871,
+//      "resize": "fit"
 //      },
-//      "large":{
-//      "w":600,
-//      "h":700,
-//      "resize":"fit"
+//      "small": {
+//      "w": 340,
+//      "h": 340,
+//      "resize": "fit"
 //      }
 //      }
 //      }
 //      ]
 //    },
-//    "source":"\u003ca href=\"http:\/\/twitter.com\" rel=\"nofollow\"\u003eTwitter Web Client\u003c\/a\u003e",
-//    "in_reply_to_status_id":null,
-//    "in_reply_to_status_id_str":null,
-//    "in_reply_to_user_id":null,
-//    "in_reply_to_user_id_str":null,
-//    "in_reply_to_screen_name":null,
-//    "user":{
-//      "id":1011638875746439169,
-//      "id_str":"1011638875746439169",
-//      "name":"Neni the ambulance",
-//      "screen_name":"neniambulance",
-//      "location":"World",
-//      "description":"I'm an ambulance, neni neni.  I will come and get you all. ALL! #JeSuisNENI #NENI #TEAMNENI #GONENI\nFacebook: https:\/\/t.co\/xQzvksX9BK",
-//      "url":null,
-//      "entities":{
-//        "description":{
-//          "urls":[
-//          {
-//          "url":"https:\/\/t.co\/xQzvksX9BK",
-//          "expanded_url":"https:\/\/www.facebook.com\/nenitheambulanceofficial",
-//          "display_url":"facebook.com\/nenitheambulan\u2026",
-//          "indices":[
-//          110,
-//          133
-//          ]
-//          }
-//          ]
-//        }
-//      },
-//      "protected":false,
-//      "followers_count":12675,
-//      "friends_count":106,
-//      "listed_count":18,
-//      "created_at":"Tue Jun 26 15:54:38 +0000 2018",
-//      "favourites_count":364,
-//      "utc_offset":null,
-//      "time_zone":null,
-//      "geo_enabled":true,
-//      "verified":false,
-//      "statuses_count":52331,
-//      "lang":"en",
-//      "contributors_enabled":false,
-//      "is_translator":false,
-//      "is_translation_enabled":false,
-//      "profile_background_color":"000000",
-//      "profile_background_image_url":"http:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
-//      "profile_background_image_url_https":"https:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
-//      "profile_background_tile":false,
-//      "profile_image_url":"http:\/\/pbs.twimg.com\/profile_images\/1011639519832150017\/7pIJxVjl_normal.jpg",
-//      "profile_image_url_https":"https:\/\/pbs.twimg.com\/profile_images\/1011639519832150017\/7pIJxVjl_normal.jpg",
-//      "profile_link_color":"1B95E0",
-//      "profile_sidebar_border_color":"000000",
-//      "profile_sidebar_fill_color":"000000",
-//      "profile_text_color":"000000",
-//      "profile_use_background_image":false,
-//      "has_extended_profile":false,
-//      "default_profile":false,
-//      "default_profile_image":false,
-//      "following":false,
-//      "follow_request_sent":false,
-//      "notifications":false,
-//      "translator_type":"none"
+//    "truncated": false,
+//    "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+//    "in_reply_to_status_id": null,
+//    "in_reply_to_status_id_str": null,
+//    "in_reply_to_user_id": null,
+//    "in_reply_to_user_id_str": null,
+//    "in_reply_to_screen_name": null,
+
+//    "user": {
+
+//      "protected": false,
+//      "followers_count": 4324,
+//      "friends_count": 410,
+//      "listed_count": 103,
+//      "created_at": "Mon Jun 09 17:00:58 +0000 2008",
+//      "favourites_count": 815,
+//      "utc_offset": -18000,
+//      "time_zone": "Central Time (US & Canada)",
+//      "geo_enabled": true,
+//      "verified": false,
+//      "statuses_count": 2218,
+//      "lang": "en",
+//      "contributors_enabled": false,
+//      "is_translator": false,
+//      "is_translation_enabled": false,
+//      "profile_background_color": "000000",
+//      "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+//      "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+//      "profile_background_tile": false,
+//      "profile_image_url": "http://pbs.twimg.com/profile_images/436903139183054849/i_MbCcoW_normal.jpeg",
+//      "profile_image_url_https": "https://pbs.twimg.com/profile_images/436903139183054849/i_MbCcoW_normal.jpeg",
+//      "profile_banner_url": "https://pbs.twimg.com/profile_banners/15062340/1447451621",
+//      "profile_link_color": "4A913C",
+//      "profile_sidebar_border_color": "000000",
+//      "profile_sidebar_fill_color": "000000",
+//      "profile_text_color": "000000",
+//      "profile_use_background_image": false,
+//      "has_extended_profile": true,
+//      "default_profile": false,
+//      "default_profile_image": false,
+//      "following": true,
+//      "follow_request_sent": false,
+//      "notifications": false
 //    },
-//    "geo":null,
-//    "coordinates":null,
-//    "place":null,
-//    "contributors":null,
-//    "is_quote_status":false,
-//    "retweet_count":253,
-//    "favorite_count":921,
-//    "favorited":false,
-//    "retweeted":false,
-//    "possibly_sensitive":false,
-//    "possibly_sensitive_appealable":false,
-//    "lang":"en"
+//    "geo": null,
+//    "coordinates": null,
+//    "place": null,
+//    "contributors": null,
+//    "is_quote_status": false,
+//    "retweet_count": 0,
+//    "favorite_count": 11,
+//    "favorited": false,
+//    "retweeted": false,
+//    "possibly_sensitive": false,
+//    "possibly_sensitive_appealable": false,
+//    "lang": "en"
 //  },
-//  "retweet_count":0,
-//  "favorite_count":2,
-//  "favorited":false,
-//  "retweeted":false,
-//  "possibly_sensitive":false,
-//  "possibly_sensitive_appealable":false,
-//  "lang":"tr"
+//  "is_quote_status": true,
+//  "retweet_count": 0,
+//  "favorite_count": 0,
+//  "favorited": false,
+//  "retweeted": false,
+//  "possibly_sensitive": false,
+//  "possibly_sensitive_appealable": false,
+//  "lang": "en"
+//}

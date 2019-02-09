@@ -22,3 +22,8 @@ public struct Tweet : Codable {
   public let lang : String
 }
 
+extension Tweet : TweetProtocol {
+  public var quoted_tweet: TweetProtocol? {
+    return self.quoted_status
+  }
+}

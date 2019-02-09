@@ -19,3 +19,8 @@ public struct QuotedTweet : Codable {
   public let lang : String
 }
 
+extension QuotedTweet : TweetProtocol {
+  public var quoted_tweet: TweetProtocol? {
+    return nil
+  }
+}

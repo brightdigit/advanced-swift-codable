@@ -25,3 +25,19 @@ let decoder = JSONDecoder()
 decoder.dateDecodingStrategy = .formatted(twitterDateFormatter)
 let tweet = try decoder.decode(Tweet.self, from: twitterData)
 
+//func printTweet (_ tweet: Tweet, withQuoteLevel level: Int) {
+//  print(String(repeating: ">", count: level),tweet.full_text)
+//}
+//
+//func printTweet (_ tweet: QuotedTweet, withQuoteLevel level: Int) {
+//  print(String(repeating: ">", count: level),tweet.full_text)
+//}
+
+func printTweet(_ tweet: TweetProtocol, withQuoteLevel level: Int = 0) {
+  print(String(repeating: ">", count: level),tweet.full_text)
+  if let quoted_tweet = tweet.quoted_tweet {
+    printTweet(quoted_tweet, withQuoteLevel: level+1)
+  }
+}
+
+printTweet(tweet)

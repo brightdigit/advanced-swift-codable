@@ -6,7 +6,6 @@ public struct TwitterDateFormatter {
   public static let shared = {
     dateFormat -> DateFormatter in
     let formatter = DateFormatter ()
-    formatter.locale = Locale(identifier: "en_US_POSIX")
     formatter.dateFormat = dateFormat
     return formatter
   }(formatString)

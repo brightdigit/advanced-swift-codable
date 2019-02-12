@@ -41,10 +41,10 @@ guard let twitterURL = Bundle.main.url(forResource: "twitter", withExtension: "j
 //  print(String(repeating: ">", count: level),tweet.full_text)
 //}
 
-func printTweet(_ tweet: TweetProtocol, withQuoteLevel level: Int = 0) {
-  print(String(repeating: ">", count: level),tweet.fullText)
+func printTweet(_ tweet: TweetProtocol, withDateTime includeDateTime: Bool = true, withQuoteLevel level: Int = 0) {
+  print(includeDateTime ? (tweet.createdAt) : (""),String(repeating: ">", count: level),tweet.fullText)
   if let quotedTweet = tweet.quotedTweet {
-    printTweet(quotedTweet, withQuoteLevel: level+1)
+    printTweet(quotedTweet, withDateTime: false, withQuoteLevel: level+1)
   }
 }
 

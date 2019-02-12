@@ -24,7 +24,7 @@ public struct TwitterDecoder {
     return decoder
   }(TwitterDateFormatter.shared)
   
-  public static let shared = TwitterDecoder.init()
+  public static let shared = TwitterDecoder()
   
   public func tweet(fromUrl url: URL) throws -> Tweet {
     let twitterData = try Data(contentsOf: url)

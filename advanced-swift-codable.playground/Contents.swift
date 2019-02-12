@@ -49,5 +49,5 @@ func printTweet(_ tweet: TweetProtocol, withDateTime includeDateTime: Bool = tru
 }
 
 let tweet = try! TwitterDecoder.shared.tweet(fromUrl: twitterURL)
-
 printTweet(tweet)
+

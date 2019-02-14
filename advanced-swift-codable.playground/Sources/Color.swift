@@ -1,5 +1,8 @@
 import Foundation
 import CoreGraphics
+#if os(iOS) || os(watchOS) || os(tvOS)
+import UIKit
+#endif
 
 public struct Color : Codable {
   public let red : CGFloat
@@ -25,4 +28,6 @@ public struct Color : Codable {
     try container.encode(string)
   }
 }
+
+
 

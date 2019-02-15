@@ -12,7 +12,7 @@ public struct TweetUser : Codable {
   public let followers_count : Int
   public let friends_count : Int
   public let listed_count : Int
-  public let created_at : Date
+  public let created_at : String
   public let favourites_count : Int
   public let utc_offset : TimeInterval
   public let time_zone : String
